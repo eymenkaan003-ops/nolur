@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zümra ❤️</title>
+<style>
+  body{
+    background:#fff0f5;
+    font-family:"Poppins",sans-serif;
+    text-align:center;
+    overflow:hidden;
+  }
+  h1{margin-top:60px;color:#d63384}
+  button{
+    margin-top:20px;
+    background:#ff4da6;
+    color:#fff;
+    border:none;
+    padding:15px 30px;
+    font-size:18px;
+    border-radius:25px;
+    cursor:pointer;
+    transition:.3s;
+  }
+  button:hover{transform:scale(1.1)}
+  #mesaj{display:none;color:#b30059;font-size:20px;margin:30px auto;max-width:700px}
+  #secenekler{display:none;margin-top:25px}
+  canvas{display:none}
+</style>
+</head>
+<body>
+
+<h1>Sevgilim... küs kalmayalım 💔</h1>
+<button onclick="goster()">Kararsızsan buraya dokun 💭</button>
+
+<div id="mesaj">
+<p>Zümra…  
+Bazen kelimeler yetersiz kalıyor.  
+Sana olan sevgimi anlatmaya ne cümle, ne şiir yeter.  
+Sensiz bir gün bile eksik hissediyorum kendimi.  
+Bir daha öpmek istiyorum demeyeceğim;  
+sadece gülümsemen, yanımda olman yeter. 💖</p>
+</div>
+
+<div id="secenekler">
+  <button id="evet" onclick="barisal()">Barışalım ❤️</button>
+  <button id="hayir" onclick="barismayalim()">Barışmayalım 💔</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+function goster(){
+  document.getElementById("mesaj").style.display="block";
+  document.getElementById("secenekler").style.display="block";
+}
+function barismayalim(){
+  let h=document.getElementById("hayir");
+  h.style.transform="scale(0)";
+  h.style.opacity="0";
+  setTimeout(()=>h.remove(),600);
+}
+function barisal(){
+  document.getElementById("secenekler").style.display="none";
+  document.getElementById("mesaj").style.display="none";
+  const canvas=document.getElementById("canvas");
+  const ctx=canvas.getContext("2d");
+  canvas.width=window.innerWidth;
+  canvas.height=400;
+  canvas.style.display="block";
+
+  const text="Seni Seviyorum Zümra ❤️";
+  const temp=document.createElement("canvas");
+  const tctx=temp.getContext("2d");
+  temp.width=canvas.width;
+  temp.height=canvas.height;
+  tctx.font="bold 80px Poppins";
+  tctx.textAlign="center";
+  tctx.fillText(text,canvas.width/2,200);
+  const data=tctx.getImageData(0,0,canvas.width,canvas.height).data;
+
+  let dots=[];
+  for(let y=0;y<canvas.height;y+=6){
+    for(let x=0;x<canvas.width;x+=6){
+      const i=(y*canvas.width+x)*4;
+      if(data[i+3]>150){
+        dots.push({x:Math.random()*canvas.width,
+                   y:Math.random()*canvas.height,
+                   tx:x,ty:y});
+      }
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#ff1a75";
+    dots.forEach(p=>{
+      p.x+=(p.tx-p.x)*0.05;
+      p.y+=(p.ty-p.y)*0.05;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,2.2,0,Math.PI*2);
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+</script>
+</body>
+</html>
